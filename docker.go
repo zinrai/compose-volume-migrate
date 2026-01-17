@@ -18,19 +18,14 @@ func checkDocker() error {
 	return nil
 }
 
-// checkRunningContainers checks if any containers are running
-func checkRunningContainers() error {
-	cmd := exec.Command("docker", "compose", "ps", "-q", "--status", "running")
+// checkVolumeInUse checks if volume is being used by any running container
+func checkVolumeInUse(volumeName string) (bool, error) {
+	cmd := exec.Command("docker", "ps", "-q", "--filter", fmt.Sprintf("volume=%s", volumeName))
 	output, err := cmd.Output()
 	if err != nil {
-		return fmt.Errorf("failed to check running containers: %w", err)
+		return false, fmt.Errorf("failed to check volume usage: %w", err)
 	}
-
-	if len(bytes.TrimSpace(output)) > 0 {
-		return fmt.Errorf("running containers detected. Stop services first: docker compose stop")
-	}
-
-	return nil
+	return len(bytes.TrimSpace(output)) > 0, nil
 }
 
 // volumeExists checks if docker volume exists

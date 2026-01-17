@@ -9,10 +9,6 @@ This tool assumes that volumes without external: true are Compose-managed epheme
 - Automatically detects external volumes from `docker-compose.yml`
 - Exports/imports only volumes with `external: true`
 
-## Prerequisites
-
-Docker Compose v2
-
 ## Installation
 
 ```bash
@@ -25,7 +21,6 @@ $ go install github.com/zinrai/compose-volume-migrate@latest
 
 ```bash
 $ cd /path/to/project
-$ docker compose stop
 $ compose-volume-migrate export
 ```
 
@@ -48,8 +43,8 @@ $ docker compose up -d
 ### Export
 
 1. Parses `docker-compose.yml` and filters `external: true` volumes
-2. Checks for running containers (fails if any)
-3. Checks for existing tar.gz files (fails if exist)
+2. Checks for existing tar.gz files (fails if exist)
+3. Checks if each volume is in use (fails if running container detected)
 4. Exports each volume: `busybox:stable-glibc` + `tar`
 
 ### Import

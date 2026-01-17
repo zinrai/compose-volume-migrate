@@ -29,11 +29,6 @@ func runExport() error {
 		return nil
 	}
 
-	// Check for running containers
-	if err := checkRunningContainers(); err != nil {
-		return err
-	}
-
 	// Check for existing tar.gz files
 	for _, volumeName := range volumes {
 		tarFile := volumeName + ".tar.gz"
@@ -47,6 +42,15 @@ func runExport() error {
 		if !volumeExists(volumeName) {
 			fmt.Printf("Skip %s (not found)\n", volumeName)
 			continue
+		}
+
+		// Check if volume is in use
+		inUse, err := checkVolumeInUse(volumeName)
+		if err != nil {
+			return err
+		}
+		if inUse {
+			return fmt.Errorf("volume %s is in use by running container", volumeName)
 		}
 
 		fmt.Printf("Exporting %s\n", volumeName)
