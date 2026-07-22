@@ -9,12 +9,6 @@ This tool assumes that volumes without external: true are Compose-managed epheme
 - Automatically detects external volumes from `docker-compose.yml`
 - Exports/imports only volumes with `external: true`
 
-## Installation
-
-```bash
-$ go install github.com/zinrai/compose-volume-migrate@latest
-```
-
 ## Migration Workflow
 
 **Source host:**
